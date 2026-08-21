@@ -2,11 +2,387 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>synapse</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Synapse, neural network from scratch in Rust</title>
+<meta name="description" content="Synapse is a neural network from scratch in Rust: a reverse-mode autograd engine and a tiny MLP, trained on XOR, no ML frameworks.">
+<meta name="author" content="Pavan Nallamothu">
+<link rel="canonical" href="https://pavanchow.github.io/synapse/">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Synapse, neural network from scratch in Rust">
+<meta property="og:description" content="A reverse-mode autograd engine and a tiny MLP built from scratch in Rust, trained on XOR with no ML frameworks.">
+<meta property="og:url" content="https://pavanchow.github.io/synapse/">
+<meta property="og:site_name" content="Synapse">
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Synapse, neural network from scratch in Rust">
+<meta name="twitter:description" content="A reverse-mode autograd engine and a tiny MLP built from scratch in Rust, trained on XOR with no ML frameworks.">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Synapse",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Cross-platform",
+  "description": "A neural network from scratch in Rust: a reverse-mode autograd engine and a tiny MLP, trained on XOR, no ML frameworks.",
+  "author": {
+    "@type": "Person",
+    "name": "Pavan Nallamothu"
+  },
+  "url": "https://pavanchow.github.io/synapse/",
+  "codeRepository": "https://github.com/pavanchow/synapse",
+  "programmingLanguage": "Rust"
+}
+</script>
+
+<style>
+  :root {
+    --ink: #1d1d1f;
+    --muted: #6e6e73;
+    --line: #d2d2d7;
+    --bg: #ffffff;
+    --panel: #f5f5f7;
+    --accent: #0071e3;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+  header.hero {
+    padding: 120px 0 80px;
+    text-align: center;
+    border-bottom: 1px solid var(--line);
+  }
+  .eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 13px;
+    color: var(--muted);
+    font-weight: 600;
+    margin-bottom: 16px;
+  }
+  h1 {
+    font-size: 56px;
+    line-height: 1.05;
+    font-weight: 700;
+    margin: 0 0 20px;
+    letter-spacing: -0.02em;
+  }
+  .tagline {
+    font-size: 22px;
+    color: var(--muted);
+    max-width: 600px;
+    margin: 0 auto 32px;
+    line-height: 1.4;
+  }
+  .cta-row {
+    display: flex;
+    gap: 14px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .btn {
+    display: inline-block;
+    padding: 12px 24px;
+    border-radius: 980px;
+    font-size: 16px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: opacity 0.2s ease;
+  }
+  .btn:hover { opacity: 0.8; }
+  .btn-primary {
+    background: var(--accent);
+    color: #fff;
+  }
+  .btn-secondary {
+    background: var(--panel);
+    color: var(--ink);
+    border: 1px solid var(--line);
+  }
+  section {
+    padding: 72px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  section:last-of-type { border-bottom: none; }
+  h2 {
+    font-size: 34px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin: 0 0 16px;
+    text-align: center;
+  }
+  .lede {
+    font-size: 18px;
+    color: var(--muted);
+    max-width: 620px;
+    margin: 0 auto 48px;
+    text-align: center;
+    line-height: 1.6;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 24px;
+  }
+  .card {
+    background: var(--panel);
+    border-radius: 18px;
+    padding: 28px;
+  }
+  .card h3 {
+    font-size: 19px;
+    margin: 0 0 10px;
+  }
+  .card p {
+    font-size: 15px;
+    color: var(--muted);
+    line-height: 1.6;
+    margin: 0;
+  }
+  .panel {
+    background: var(--panel);
+    border-radius: 24px;
+    padding: 40px;
+  }
+  .panel-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--muted);
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    text-align: center;
+  }
+  canvas {
+    width: 100%;
+    height: 260px;
+    display: block;
+  }
+  .stat-row {
+    display: flex;
+    justify-content: center;
+    gap: 48px;
+    margin-top: 24px;
+    flex-wrap: wrap;
+    text-align: center;
+  }
+  .stat-num {
+    font-size: 28px;
+    font-weight: 700;
+  }
+  .stat-label {
+    font-size: 13px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-top: 4px;
+  }
+  pre {
+    background: #1d1d1f;
+    color: #f5f5f7;
+    padding: 24px;
+    border-radius: 14px;
+    overflow-x: auto;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  code {
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+  }
+  footer {
+    text-align: center;
+    padding: 48px 0 80px;
+    color: var(--muted);
+    font-size: 14px;
+  }
+  footer a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+</style>
 </head>
 <body>
-<h1>synapse</h1>
-<p>Site coming soon.</p>
-<p><a href="https://github.com/pavanchow/synapse">View repository</a></p>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Synapse</div>
+    <h1>A neural network from scratch in Rust.</h1>
+    <p class="tagline">A reverse-mode autograd engine you can read node by node, and a tiny MLP built on top of it, no ML frameworks, no tensor crates.</p>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="https://github.com/pavanchow/synapse">View on GitHub</a>
+      <a class="btn btn-secondary" href="#autograd">How it works</a>
+    </div>
+  </div>
+</header>
+
+<section id="autograd">
+  <div class="wrap">
+    <h2>The autograd idea</h2>
+    <p class="lede">Every value in Synapse remembers how it was made. Add, multiply, subtract, divide, raise to a power, negate, or pass through tanh, and the operation is recorded as a node in a graph with pointers back to its inputs. Call <code>backward()</code> once on the output and gradients for every value in the graph fall out through the chain rule, in reverse topological order, with shared subexpressions correctly accumulating gradient from every place they are used.</p>
+    <div class="grid">
+      <div class="card">
+        <h3>Value graph</h3>
+        <p>A scalar <code>Value</code> wraps its data, its gradient, and the operation and parent nodes that produced it.</p>
+      </div>
+      <div class="card">
+        <h3>Topological backward pass</h3>
+        <p>One <code>backward()</code> call walks the graph in reverse dependency order and pushes gradients through every op.</p>
+      </div>
+      <div class="card">
+        <h3>Gradient accumulation</h3>
+        <p>A value used twice, like <code>a * a</code>, sums gradient contributions from each use instead of overwriting.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="xor">
+  <div class="wrap">
+    <h2>The XOR demo</h2>
+    <p class="lede">A 2-4-4-1 multilayer perceptron, two hidden layers of tanh neurons, trained on the four XOR points with mean squared error. XOR is not linearly separable, so it is a real test that the hidden layers and the gradients are doing their job.</p>
+    <div class="panel">
+      <div class="panel-title">Training loss, real run, seeded and deterministic</div>
+      <canvas id="lossChart" width="800" height="260"></canvas>
+      <div class="stat-row">
+        <div>
+          <div class="stat-num">1.79</div>
+          <div class="stat-label">Initial loss</div>
+        </div>
+        <div>
+          <div class="stat-num">&lt;0.0001</div>
+          <div class="stat-label">Final loss</div>
+        </div>
+        <div>
+          <div class="stat-num">4/4</div>
+          <div class="stat-label">XOR points correct</div>
+        </div>
+      </div>
+    </div>
+    <noscript>
+      <p style="text-align:center; color:#6e6e73; margin-top:24px;">
+        JavaScript is disabled, so the animated loss curve above is not rendered. In a real training run the loss on the four XOR points starts around 1.79 and drops below 0.0001 within 300 gradient descent steps, at which point all four XOR inputs classify correctly.
+      </p>
+    </noscript>
+  </div>
+</section>
+
+<section id="usage">
+  <div class="wrap">
+    <h2>Usage</h2>
+    <p class="lede">Clone it, run it, test it. That is the whole workflow.</p>
+    <pre><code>cargo run --release   # trains XOR, prints the loss curve
+cargo test            # gradient check, shared-node test, XOR training test</code></pre>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    By Pavan Nallamothu. <a href="https://github.com/pavanchow/synapse">Source on GitHub</a>.
+  </div>
+</footer>
+
+<script>
+(function () {
+  var lossData = [1.794003,0.326411,0.267099,0.244093,0.231178,0.221610,0.213085,0.204712,0.196127,0.187173,0.177776,0.167895,0.157512,0.146626,0.135268,0.123503,0.111441,0.099237,0.087088,0.075223,0.063884,0.053302,0.043674,0.035140,0.027773,0.021575,0.016490,0.012414,0.009217,0.006758,0.004901,0.003520,0.002506,0.001771,0.001244,0.000869,0.000605,0.000419,0.000289,0.000199,0.000137,0.000094,0.000064,0.000044,0.000030,0.000021,0.000014,0.000010,0.000006,0.000004,0.000003,0.000002,0.000001,0.000001,0.000001,0.000000,0.000000,0.000000,0.000000,0.000000,0.000000];
+
+  var canvas = document.getElementById('lossChart');
+  if (!canvas || !canvas.getContext) return;
+  var ctx = canvas.getContext('2d');
+
+  function resize() {
+    var ratio = window.devicePixelRatio || 1;
+    var rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * ratio;
+    canvas.height = rect.height * ratio;
+    ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+    return { w: rect.width, h: rect.height };
+  }
+
+  var maxLoss = Math.max.apply(null, lossData);
+
+  function draw(fraction) {
+    var dims = resize();
+    var w = dims.w, h = dims.h;
+    var padL = 40, padR = 16, padT = 16, padB = 28;
+    var plotW = w - padL - padR;
+    var plotH = h - padT - padB;
+
+    ctx.clearRect(0, 0, w, h);
+
+    ctx.strokeStyle = '#d2d2d7';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    var gridLines = 4;
+    for (var g = 0; g <= gridLines; g++) {
+      var y = padT + (plotH / gridLines) * g;
+      ctx.moveTo(padL, y);
+      ctx.lineTo(padL + plotW, y);
+    }
+    ctx.stroke();
+
+    ctx.fillStyle = '#6e6e73';
+    ctx.font = '11px -apple-system, Helvetica, Arial, sans-serif';
+    ctx.textAlign = 'right';
+    for (var g2 = 0; g2 <= gridLines; g2++) {
+      var val = maxLoss * (1 - g2 / gridLines);
+      var yy = padT + (plotH / gridLines) * g2;
+      ctx.fillText(val.toFixed(2), padL - 8, yy + 3);
+    }
+
+    var count = Math.max(2, Math.floor(lossData.length * fraction));
+    ctx.strokeStyle = '#0071e3';
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    for (var i = 0; i < count; i++) {
+      var x = padL + (plotW * i) / (lossData.length - 1);
+      var norm = lossData[i] / maxLoss;
+      var y2 = padT + plotH * (1 - norm);
+      if (i === 0) ctx.moveTo(x, y2);
+      else ctx.lineTo(x, y2);
+    }
+    ctx.stroke();
+
+    if (count > 0) {
+      var lastX = padL + (plotW * (count - 1)) / (lossData.length - 1);
+      var lastNorm = lossData[count - 1] / maxLoss;
+      var lastY = padT + plotH * (1 - lastNorm);
+      ctx.fillStyle = '#0071e3';
+      ctx.beginPath();
+      ctx.arc(lastX, lastY, 4, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  var start = null;
+  var duration = 2200;
+
+  function animate(ts) {
+    if (start === null) start = ts;
+    var elapsed = ts - start;
+    var fraction = Math.min(1, elapsed / duration);
+    draw(fraction);
+    if (fraction < 1) {
+      window.requestAnimationFrame(animate);
+    }
+  }
+
+  draw(0);
+  window.requestAnimationFrame(animate);
+  window.addEventListener('resize', function () { draw(1); });
+})();
+</script>
+
 </body>
 </html>
