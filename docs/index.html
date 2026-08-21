@@ -60,7 +60,7 @@
     padding: 0 24px;
   }
   header.hero {
-    padding: 120px 0 80px;
+    padding: 100px 0 60px;
     text-align: center;
     border-bottom: 1px solid var(--line);
   }
@@ -100,6 +100,9 @@
     font-weight: 500;
     text-decoration: none;
     transition: opacity 0.2s ease;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
   }
   .btn:hover { opacity: 0.8; }
   .btn-primary {
@@ -110,6 +113,10 @@
     background: var(--panel);
     color: var(--ink);
     border: 1px solid var(--line);
+  }
+  .btn:disabled {
+    opacity: 0.45;
+    cursor: default;
   }
   section {
     padding: 72px 0;
@@ -169,18 +176,46 @@
     width: 100%;
     height: 260px;
     display: block;
+    border-radius: 14px;
+    background: #fff;
+  }
+  #boundaryChart {
+    height: 260px;
+  }
+  .demo-controls {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 28px;
+  }
+  .demo-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-top: 8px;
+  }
+  @media (max-width: 640px) {
+    .demo-grid { grid-template-columns: 1fr; }
+  }
+  .chart-label {
+    font-size: 13px;
+    color: var(--muted);
+    text-align: center;
+    margin: 10px 0 0;
   }
   .stat-row {
     display: flex;
     justify-content: center;
     gap: 48px;
-    margin-top: 24px;
+    margin-top: 28px;
     flex-wrap: wrap;
     text-align: center;
   }
   .stat-num {
     font-size: 28px;
     font-weight: 700;
+    font-variant-numeric: tabular-nums;
   }
   .stat-label {
     font-size: 13px;
@@ -189,6 +224,29 @@
     letter-spacing: 0.06em;
     margin-top: 4px;
   }
+  .pred-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 28px;
+    font-size: 15px;
+  }
+  .pred-table th, .pred-table td {
+    padding: 10px 12px;
+    text-align: center;
+    border-bottom: 1px solid var(--line);
+  }
+  .pred-table th {
+    color: var(--muted);
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .pred-table td.mono {
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+  }
+  .pred-ok { color: #1a8917; font-weight: 700; }
+  .pred-bad { color: #d92d20; font-weight: 700; }
   pre {
     background: #1d1d1f;
     color: #f5f5f7;
@@ -222,10 +280,65 @@
     <p class="tagline">A reverse-mode autograd engine you can read node by node, and a tiny MLP built on top of it, no ML frameworks, no tensor crates.</p>
     <div class="cta-row">
       <a class="btn btn-primary" href="https://github.com/pavanchow/synapse">View on GitHub</a>
-      <a class="btn btn-secondary" href="#autograd">How it works</a>
+      <a class="btn btn-secondary" href="#xor">Try the live demo</a>
     </div>
   </div>
 </header>
+
+<section id="xor">
+  <div class="wrap">
+    <h2>Train XOR in your browser</h2>
+    <p class="lede">This is not a canned animation. The buttons below drive a scalar autograd engine and a 2 4 4 1 tanh MLP ported line for line from <code>src/value.rs</code> and <code>src/nn.rs</code>, running right here in JavaScript. Every click does a real forward pass, a real backward pass through the computation graph, and a real gradient descent step.</p>
+
+    <div class="panel">
+      <div class="panel-title">Live training run</div>
+      <div class="demo-controls">
+        <button class="btn btn-primary" id="btnTrain">Train</button>
+        <button class="btn btn-secondary" id="btnStep">Step 25 epochs</button>
+        <button class="btn btn-secondary" id="btnReset">Reset</button>
+      </div>
+
+      <div class="demo-grid">
+        <div>
+          <canvas id="lossChart" width="420" height="260"></canvas>
+          <p class="chart-label">Loss curve, drawn live from the real MSE at each epoch</p>
+        </div>
+        <div>
+          <canvas id="boundaryChart" width="420" height="260"></canvas>
+          <p class="chart-label">Decision boundary, the trained net evaluated over a grid</p>
+        </div>
+      </div>
+
+      <div class="stat-row">
+        <div>
+          <div class="stat-num" id="statEpoch">0</div>
+          <div class="stat-label">Epoch</div>
+        </div>
+        <div>
+          <div class="stat-num" id="statLoss">1.0000</div>
+          <div class="stat-label">Loss (MSE)</div>
+        </div>
+        <div>
+          <div class="stat-num" id="statCorrect">0/4</div>
+          <div class="stat-label">XOR points correct</div>
+        </div>
+      </div>
+
+      <table class="pred-table">
+        <thead>
+          <tr><th>x1</th><th>x2</th><th>target</th><th>prediction</th><th>result</th></tr>
+        </thead>
+        <tbody id="predBody"></tbody>
+      </table>
+    </div>
+
+    <noscript>
+      <p style="text-align:center; color:#6e6e73; margin-top:24px;">
+        JavaScript is disabled, so the animated loss curve above is not rendered. In a real training run the loss on the four XOR points starts around 1.79 and drops below 0.0001 within 300 gradient descent steps, at which point all four XOR inputs classify correctly.
+      </p>
+    </noscript>
+  </div>
+</section>
 
 <section id="autograd">
   <div class="wrap">
@@ -248,36 +361,6 @@
   </div>
 </section>
 
-<section id="xor">
-  <div class="wrap">
-    <h2>The XOR demo</h2>
-    <p class="lede">A 2-4-4-1 multilayer perceptron, two hidden layers of tanh neurons, trained on the four XOR points with mean squared error. XOR is not linearly separable, so it is a real test that the hidden layers and the gradients are doing their job.</p>
-    <div class="panel">
-      <div class="panel-title">Training loss, real run, seeded and deterministic</div>
-      <canvas id="lossChart" width="800" height="260"></canvas>
-      <div class="stat-row">
-        <div>
-          <div class="stat-num">1.79</div>
-          <div class="stat-label">Initial loss</div>
-        </div>
-        <div>
-          <div class="stat-num">&lt;0.0001</div>
-          <div class="stat-label">Final loss</div>
-        </div>
-        <div>
-          <div class="stat-num">4/4</div>
-          <div class="stat-label">XOR points correct</div>
-        </div>
-      </div>
-    </div>
-    <noscript>
-      <p style="text-align:center; color:#6e6e73; margin-top:24px;">
-        JavaScript is disabled, so the animated loss curve above is not rendered. In a real training run the loss on the four XOR points starts around 1.79 and drops below 0.0001 within 300 gradient descent steps, at which point all four XOR inputs classify correctly.
-      </p>
-    </noscript>
-  </div>
-</section>
-
 <section id="usage">
   <div class="wrap">
     <h2>Usage</h2>
@@ -295,92 +378,407 @@ cargo test            # gradient check, shared-node test, XOR training test</cod
 
 <script>
 (function () {
-  var lossData = [1.794003,0.326411,0.267099,0.244093,0.231178,0.221610,0.213085,0.204712,0.196127,0.187173,0.177776,0.167895,0.157512,0.146626,0.135268,0.123503,0.111441,0.099237,0.087088,0.075223,0.063884,0.053302,0.043674,0.035140,0.027773,0.021575,0.016490,0.012414,0.009217,0.006758,0.004901,0.003520,0.002506,0.001771,0.001244,0.000869,0.000605,0.000419,0.000289,0.000199,0.000137,0.000094,0.000064,0.000044,0.000030,0.000021,0.000014,0.000010,0.000006,0.000004,0.000003,0.000002,0.000001,0.000001,0.000001,0.000000,0.000000,0.000000,0.000000,0.000000,0.000000];
+  "use strict";
 
-  var canvas = document.getElementById('lossChart');
-  if (!canvas || !canvas.getContext) return;
-  var ctx = canvas.getContext('2d');
+  // ---- Seeded PRNG (mulberry32), so Reset always reproduces the same run ----
+  function mulberry32(seed) {
+    var a = seed;
+    return function () {
+      a |= 0;
+      a = (a + 0x6D2B79F5) | 0;
+      var t = Math.imul(a ^ (a >>> 15), 1 | a);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  function randRange(rng, lo, hi) {
+    return lo + (hi - lo) * rng();
+  }
 
-  function resize() {
+  // ---- Scalar autograd, ported from src/value.rs ----
+  function Value(data, op, prev) {
+    this.data = data;
+    this.grad = 0;
+    this.op = op || "leaf";
+    this.prev = prev || [];
+    this.n = 0;
+  }
+  Value.of = function (x) {
+    return x instanceof Value ? x : new Value(x);
+  };
+  Value.prototype.add = function (other) {
+    var o = Value.of(other);
+    return new Value(this.data + o.data, "add", [this, o]);
+  };
+  Value.prototype.mul = function (other) {
+    var o = Value.of(other);
+    return new Value(this.data * o.data, "mul", [this, o]);
+  };
+  Value.prototype.neg = function () {
+    return new Value(-this.data, "neg", [this]);
+  };
+  Value.prototype.sub = function (other) {
+    return this.add(Value.of(other).neg());
+  };
+  Value.prototype.pow = function (n) {
+    var v = new Value(Math.pow(this.data, n), "pow", [this]);
+    v.n = n;
+    return v;
+  };
+  Value.prototype.tanh = function () {
+    return new Value(Math.tanh(this.data), "tanh", [this]);
+  };
+  Value.prototype.backward = function () {
+    var topo = [];
+    var visited = new Set();
+    (function build(v) {
+      if (visited.has(v)) return;
+      visited.add(v);
+      for (var i = 0; i < v.prev.length; i++) build(v.prev[i]);
+      topo.push(v);
+    })(this);
+
+    this.grad = 1;
+    for (var i = topo.length - 1; i >= 0; i--) {
+      var v = topo[i];
+      var g = v.grad;
+      if (v.op === "add") {
+        v.prev[0].grad += g;
+        v.prev[1].grad += g;
+      } else if (v.op === "mul") {
+        v.prev[0].grad += g * v.prev[1].data;
+        v.prev[1].grad += g * v.prev[0].data;
+      } else if (v.op === "pow") {
+        v.prev[0].grad += g * v.n * Math.pow(v.prev[0].data, v.n - 1);
+      } else if (v.op === "tanh") {
+        v.prev[0].grad += g * (1 - v.data * v.data);
+      } else if (v.op === "neg") {
+        v.prev[0].grad += -g;
+      }
+    }
+  };
+
+  // ---- MLP, ported from src/nn.rs ----
+  function Neuron(nin, nonlin, rng) {
+    this.w = [];
+    for (var i = 0; i < nin; i++) this.w.push(new Value(randRange(rng, -1, 1)));
+    this.b = new Value(0);
+    this.nonlin = nonlin;
+  }
+  Neuron.prototype.forward = function (x) {
+    var act = this.b;
+    for (var i = 0; i < this.w.length; i++) act = act.add(this.w[i].mul(x[i]));
+    return this.nonlin ? act.tanh() : act;
+  };
+  Neuron.prototype.parameters = function () {
+    return this.w.concat([this.b]);
+  };
+
+  function Layer(nin, nout, nonlin, rng) {
+    this.neurons = [];
+    for (var i = 0; i < nout; i++) this.neurons.push(new Neuron(nin, nonlin, rng));
+  }
+  Layer.prototype.forward = function (x) {
+    return this.neurons.map(function (n) { return n.forward(x); });
+  };
+  Layer.prototype.parameters = function () {
+    var out = [];
+    for (var i = 0; i < this.neurons.length; i++) out = out.concat(this.neurons[i].parameters());
+    return out;
+  };
+
+  function MLP(sizes, seed) {
+    var rng = mulberry32(seed);
+    this.layers = [];
+    for (var i = 0; i < sizes.length - 1; i++) {
+      var nonlin = i !== sizes.length - 2;
+      this.layers.push(new Layer(sizes[i], sizes[i + 1], nonlin, rng));
+    }
+  }
+  MLP.prototype.forward = function (x) {
+    var out = x;
+    for (var i = 0; i < this.layers.length; i++) out = this.layers[i].forward(out);
+    return out;
+  };
+  MLP.prototype.parameters = function () {
+    var out = [];
+    for (var i = 0; i < this.layers.length; i++) out = out.concat(this.layers[i].parameters());
+    return out;
+  };
+  MLP.prototype.zeroGrad = function () {
+    var ps = this.parameters();
+    for (var i = 0; i < ps.length; i++) ps[i].grad = 0;
+  };
+  MLP.prototype.step = function (lr) {
+    var ps = this.parameters();
+    for (var i = 0; i < ps.length; i++) ps[i].data -= lr * ps[i].grad;
+  };
+
+  // ---- Training setup ----
+  var SEED = 42;
+  var LR = 0.05;
+  var SIZES = [2, 4, 4, 1];
+  var XS = [[0, 0], [0, 1], [1, 0], [1, 1]];
+  var YS = [0, 1, 1, 0];
+  var MAX_EPOCHS = 2000;
+
+  var net, lossHistory, epoch, training, rafId;
+
+  function buildNet() {
+    net = new MLP(SIZES, SEED);
+    lossHistory = [];
+    epoch = 0;
+  }
+
+  function computeLoss() {
+    var loss = new Value(0);
+    for (var i = 0; i < XS.length; i++) {
+      var inp = XS[i].map(function (v) { return new Value(v); });
+      var out = net.forward(inp)[0];
+      var target = new Value(YS[i]);
+      var diff = out.sub(target);
+      loss = loss.add(diff.mul(diff));
+    }
+    return loss.mul(1 / XS.length);
+  }
+
+  function trainOneEpoch() {
+    net.zeroGrad();
+    var loss = computeLoss();
+    loss.backward();
+    net.step(LR);
+    epoch += 1;
+    lossHistory.push(loss.data);
+    return loss.data;
+  }
+
+  function currentPredictions() {
+    var rows = [];
+    for (var i = 0; i < XS.length; i++) {
+      var inp = XS[i].map(function (v) { return new Value(v); });
+      var out = net.forward(inp)[0].data;
+      var predClass = out > 0.5 ? 1 : 0;
+      rows.push({
+        x: XS[i],
+        target: YS[i],
+        pred: out,
+        correct: predClass === YS[i]
+      });
+    }
+    return rows;
+  }
+
+  // ---- Loss chart ----
+  var lossCanvas = document.getElementById("lossChart");
+  var lossCtx = lossCanvas.getContext("2d");
+
+  function resizeCanvas(canvas) {
     var ratio = window.devicePixelRatio || 1;
     var rect = canvas.getBoundingClientRect();
     canvas.width = rect.width * ratio;
     canvas.height = rect.height * ratio;
+    var ctx = canvas.getContext("2d");
     ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
     return { w: rect.width, h: rect.height };
   }
 
-  var maxLoss = Math.max.apply(null, lossData);
-
-  function draw(fraction) {
-    var dims = resize();
+  function drawLossChart() {
+    var dims = resizeCanvas(lossCanvas);
     var w = dims.w, h = dims.h;
     var padL = 40, padR = 16, padT = 16, padB = 28;
     var plotW = w - padL - padR;
     var plotH = h - padT - padB;
 
-    ctx.clearRect(0, 0, w, h);
+    lossCtx.clearRect(0, 0, w, h);
 
-    ctx.strokeStyle = '#d2d2d7';
-    ctx.lineWidth = 1;
-    ctx.beginPath();
+    var maxLoss = 0;
+    for (var i = 0; i < lossHistory.length; i++) maxLoss = Math.max(maxLoss, lossHistory[i]);
+    if (maxLoss <= 0) maxLoss = 1;
+
+    lossCtx.strokeStyle = "#d2d2d7";
+    lossCtx.lineWidth = 1;
+    lossCtx.beginPath();
     var gridLines = 4;
     for (var g = 0; g <= gridLines; g++) {
       var y = padT + (plotH / gridLines) * g;
-      ctx.moveTo(padL, y);
-      ctx.lineTo(padL + plotW, y);
+      lossCtx.moveTo(padL, y);
+      lossCtx.lineTo(padL + plotW, y);
     }
-    ctx.stroke();
+    lossCtx.stroke();
 
-    ctx.fillStyle = '#6e6e73';
-    ctx.font = '11px -apple-system, Helvetica, Arial, sans-serif';
-    ctx.textAlign = 'right';
+    lossCtx.fillStyle = "#6e6e73";
+    lossCtx.font = "11px -apple-system, Helvetica, Arial, sans-serif";
+    lossCtx.textAlign = "right";
     for (var g2 = 0; g2 <= gridLines; g2++) {
       var val = maxLoss * (1 - g2 / gridLines);
       var yy = padT + (plotH / gridLines) * g2;
-      ctx.fillText(val.toFixed(2), padL - 8, yy + 3);
+      lossCtx.fillText(val.toFixed(2), padL - 8, yy + 3);
     }
 
-    var count = Math.max(2, Math.floor(lossData.length * fraction));
-    ctx.strokeStyle = '#0071e3';
-    ctx.lineWidth = 2.5;
-    ctx.beginPath();
-    for (var i = 0; i < count; i++) {
-      var x = padL + (plotW * i) / (lossData.length - 1);
-      var norm = lossData[i] / maxLoss;
-      var y2 = padT + plotH * (1 - norm);
-      if (i === 0) ctx.moveTo(x, y2);
-      else ctx.lineTo(x, y2);
-    }
-    ctx.stroke();
+    if (lossHistory.length > 1) {
+      lossCtx.strokeStyle = "#0071e3";
+      lossCtx.lineWidth = 2.5;
+      lossCtx.beginPath();
+      for (var i2 = 0; i2 < lossHistory.length; i2++) {
+        var x = padL + (plotW * i2) / Math.max(1, MAX_EPOCHS - 1);
+        var norm = lossHistory[i2] / maxLoss;
+        var yv = padT + plotH * (1 - norm);
+        if (i2 === 0) lossCtx.moveTo(x, yv);
+        else lossCtx.lineTo(x, yv);
+      }
+      lossCtx.stroke();
 
-    if (count > 0) {
-      var lastX = padL + (plotW * (count - 1)) / (lossData.length - 1);
-      var lastNorm = lossData[count - 1] / maxLoss;
+      var lastX = padL + (plotW * (lossHistory.length - 1)) / Math.max(1, MAX_EPOCHS - 1);
+      var lastNorm = lossHistory[lossHistory.length - 1] / maxLoss;
       var lastY = padT + plotH * (1 - lastNorm);
-      ctx.fillStyle = '#0071e3';
-      ctx.beginPath();
-      ctx.arc(lastX, lastY, 4, 0, Math.PI * 2);
-      ctx.fill();
+      lossCtx.fillStyle = "#0071e3";
+      lossCtx.beginPath();
+      lossCtx.arc(lastX, lastY, 4, 0, Math.PI * 2);
+      lossCtx.fill();
     }
   }
 
-  var start = null;
-  var duration = 2200;
+  // ---- Decision boundary chart ----
+  var boundaryCanvas = document.getElementById("boundaryChart");
+  var boundaryCtx = boundaryCanvas.getContext("2d");
 
-  function animate(ts) {
-    if (start === null) start = ts;
-    var elapsed = ts - start;
-    var fraction = Math.min(1, elapsed / duration);
-    draw(fraction);
-    if (fraction < 1) {
-      window.requestAnimationFrame(animate);
+  function drawBoundaryChart() {
+    var dims = resizeCanvas(boundaryCanvas);
+    var w = dims.w, h = dims.h;
+    var pad = 24;
+    var plotW = w - pad * 2;
+    var plotH = h - pad * 2;
+    var lo = -0.3, hi = 1.3;
+
+    boundaryCtx.clearRect(0, 0, w, h);
+
+    var res = 28;
+    var cellW = plotW / res;
+    var cellH = plotH / res;
+    for (var gy = 0; gy < res; gy++) {
+      for (var gx = 0; gx < res; gx++) {
+        var fx = lo + (hi - lo) * (gx + 0.5) / res;
+        var fy = lo + (hi - lo) * (gy + 0.5) / res;
+        var out = net.forward([new Value(fx), new Value(fy)])[0].data;
+        var t = Math.max(0, Math.min(1, out));
+        var r = Math.round(255 - t * 145);
+        var gcol = Math.round(255 - (1 - t) * 30 - t * 30);
+        var b = Math.round(255 - (1 - t) * 145);
+        boundaryCtx.fillStyle = "rgb(" + r + "," + gcol + "," + b + ")";
+        var px = pad + gx * cellW;
+        var py = pad + (res - 1 - gy) * cellH;
+        boundaryCtx.fillRect(px, py, cellW + 1, cellH + 1);
+      }
+    }
+
+    boundaryCtx.strokeStyle = "#d2d2d7";
+    boundaryCtx.lineWidth = 1;
+    boundaryCtx.strokeRect(pad, pad, plotW, plotH);
+
+    for (var i = 0; i < XS.length; i++) {
+      var px2 = pad + plotW * (XS[i][0] - lo) / (hi - lo);
+      var py2 = pad + plotH * (1 - (XS[i][1] - lo) / (hi - lo));
+      boundaryCtx.beginPath();
+      boundaryCtx.arc(px2, py2, 6, 0, Math.PI * 2);
+      boundaryCtx.fillStyle = YS[i] === 1 ? "#1d1d1f" : "#ffffff";
+      boundaryCtx.fill();
+      boundaryCtx.lineWidth = 2;
+      boundaryCtx.strokeStyle = "#1d1d1f";
+      boundaryCtx.stroke();
     }
   }
 
-  draw(0);
-  window.requestAnimationFrame(animate);
-  window.addEventListener('resize', function () { draw(1); });
+  // ---- UI wiring ----
+  var statEpoch = document.getElementById("statEpoch");
+  var statLoss = document.getElementById("statLoss");
+  var statCorrect = document.getElementById("statCorrect");
+  var predBody = document.getElementById("predBody");
+  var btnTrain = document.getElementById("btnTrain");
+  var btnStep = document.getElementById("btnStep");
+  var btnReset = document.getElementById("btnReset");
+
+  function renderStats(loss) {
+    statEpoch.textContent = String(epoch);
+    statLoss.textContent = loss.toFixed(6);
+    var rows = currentPredictions();
+    var correctCount = rows.reduce(function (n, r) { return n + (r.correct ? 1 : 0); }, 0);
+    statCorrect.textContent = correctCount + "/4";
+
+    predBody.innerHTML = "";
+    for (var i = 0; i < rows.length; i++) {
+      var r = rows[i];
+      var tr = document.createElement("tr");
+      tr.innerHTML =
+        "<td class=\"mono\">" + r.x[0] + "</td>" +
+        "<td class=\"mono\">" + r.x[1] + "</td>" +
+        "<td class=\"mono\">" + r.target + "</td>" +
+        "<td class=\"mono\">" + r.pred.toFixed(4) + "</td>" +
+        "<td class=\"" + (r.correct ? "pred-ok" : "pred-bad") + "\">" + (r.correct ? "correct" : "wrong") + "</td>";
+      predBody.appendChild(tr);
+    }
+  }
+
+  function refreshAll(loss) {
+    drawLossChart();
+    drawBoundaryChart();
+    renderStats(loss);
+  }
+
+  function stopTraining() {
+    training = false;
+    if (rafId) cancelAnimationFrame(rafId);
+    rafId = null;
+    btnTrain.textContent = "Train";
+    btnStep.disabled = false;
+    btnReset.disabled = false;
+  }
+
+  function trainLoop() {
+    if (!training) return;
+    var loss = 1;
+    for (var i = 0; i < 4; i++) {
+      if (epoch >= MAX_EPOCHS) break;
+      loss = trainOneEpoch();
+    }
+    refreshAll(loss);
+    if (epoch >= MAX_EPOCHS || loss < 0.0000005) {
+      stopTraining();
+      return;
+    }
+    rafId = requestAnimationFrame(trainLoop);
+  }
+
+  btnTrain.addEventListener("click", function () {
+    if (training) {
+      stopTraining();
+      return;
+    }
+    training = true;
+    btnTrain.textContent = "Pause";
+    btnStep.disabled = true;
+    btnReset.disabled = true;
+    rafId = requestAnimationFrame(trainLoop);
+  });
+
+  btnStep.addEventListener("click", function () {
+    var loss = 1;
+    for (var i = 0; i < 25 && epoch < MAX_EPOCHS; i++) loss = trainOneEpoch();
+    refreshAll(loss);
+  });
+
+  btnReset.addEventListener("click", function () {
+    stopTraining();
+    buildNet();
+    refreshAll(computeLoss().data);
+  });
+
+  window.addEventListener("resize", function () {
+    drawLossChart();
+    drawBoundaryChart();
+  });
+
+  buildNet();
+  refreshAll(computeLoss().data);
 })();
 </script>
 
