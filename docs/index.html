@@ -37,343 +37,180 @@
 </script>
 
 <style>
-  :root {
-    --ink: #1d1d1f;
-    --muted: #6e6e73;
-    --line: #d2d2d7;
-    --bg: #ffffff;
-    --panel: #f5f5f7;
-    --accent: #0071e3;
+  :root{
+    --accent:#5b5bd6;--accent-soft:#eeeefb;
+    --ink:#15161c;--muted:#6a6d78;--faint:#9a9dab;
+    --line:#ececed;--panel:#f7f7f9;--panel2:#fbfbfd;
+    --mono:ui-monospace,SFMono-Regular,Menlo,"SF Mono",monospace;
   }
-  * { box-sizing: border-box; }
-  html, body {
-    margin: 0;
-    padding: 0;
-    background: var(--bg);
-    color: var(--ink);
-    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-  }
-  .wrap {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 0 24px;
-  }
-  header.hero {
-    padding: 100px 0 60px;
-    text-align: center;
-    border-bottom: 1px solid var(--line);
-  }
-  .eyebrow {
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    font-size: 13px;
-    color: var(--muted);
-    font-weight: 600;
-    margin-bottom: 16px;
-  }
-  h1 {
-    font-size: 56px;
-    line-height: 1.05;
-    font-weight: 700;
-    margin: 0 0 20px;
-    letter-spacing: -0.02em;
-  }
-  .tagline {
-    font-size: 22px;
-    color: var(--muted);
-    max-width: 600px;
-    margin: 0 auto 32px;
-    line-height: 1.4;
-  }
-  .cta-row {
-    display: flex;
-    gap: 14px;
-    justify-content: center;
-    flex-wrap: wrap;
-  }
-  .btn {
-    display: inline-block;
-    padding: 12px 24px;
-    border-radius: 980px;
-    font-size: 16px;
-    font-weight: 500;
-    text-decoration: none;
-    transition: opacity 0.2s ease;
-    border: none;
-    cursor: pointer;
-    font-family: inherit;
-  }
-  .btn:hover { opacity: 0.8; }
-  .btn-primary {
-    background: var(--accent);
-    color: #fff;
-  }
-  .btn-secondary {
-    background: var(--panel);
-    color: var(--ink);
-    border: 1px solid var(--line);
-  }
-  .btn:disabled {
-    opacity: 0.45;
-    cursor: default;
-  }
-  section {
-    padding: 72px 0;
-    border-bottom: 1px solid var(--line);
-  }
-  section:last-of-type { border-bottom: none; }
-  h2 {
-    font-size: 34px;
-    font-weight: 700;
-    letter-spacing: -0.01em;
-    margin: 0 0 16px;
-    text-align: center;
-  }
-  .lede {
-    font-size: 18px;
-    color: var(--muted);
-    max-width: 620px;
-    margin: 0 auto 48px;
-    text-align: center;
-    line-height: 1.6;
-  }
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 24px;
-  }
-  .card {
-    background: var(--panel);
-    border-radius: 18px;
-    padding: 28px;
-  }
-  .card h3 {
-    font-size: 19px;
-    margin: 0 0 10px;
-  }
-  .card p {
-    font-size: 15px;
-    color: var(--muted);
-    line-height: 1.6;
-    margin: 0;
-  }
-  .panel {
-    background: var(--panel);
-    border-radius: 24px;
-    padding: 40px;
-  }
-  .panel-title {
-    font-size: 15px;
-    font-weight: 600;
-    color: var(--muted);
-    margin-bottom: 20px;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    text-align: center;
-  }
-  canvas {
-    width: 100%;
-    height: 260px;
-    display: block;
-    border-radius: 14px;
-    background: #fff;
-  }
-  #boundaryChart {
-    height: 260px;
-  }
-  .demo-controls {
-    display: flex;
-    gap: 12px;
-    justify-content: center;
-    flex-wrap: wrap;
-    margin-bottom: 28px;
-  }
-  .demo-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 24px;
-    margin-top: 8px;
-  }
-  @media (max-width: 640px) {
-    .demo-grid { grid-template-columns: 1fr; }
-  }
-  .chart-label {
-    font-size: 13px;
-    color: var(--muted);
-    text-align: center;
-    margin: 10px 0 0;
-  }
-  .stat-row {
-    display: flex;
-    justify-content: center;
-    gap: 48px;
-    margin-top: 28px;
-    flex-wrap: wrap;
-    text-align: center;
-  }
-  .stat-num {
-    font-size: 28px;
-    font-weight: 700;
-    font-variant-numeric: tabular-nums;
-  }
-  .stat-label {
-    font-size: 13px;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    margin-top: 4px;
-  }
-  .pred-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 28px;
-    font-size: 15px;
-  }
-  .pred-table th, .pred-table td {
-    padding: 10px 12px;
-    text-align: center;
-    border-bottom: 1px solid var(--line);
-  }
-  .pred-table th {
-    color: var(--muted);
-    font-weight: 600;
-    font-size: 12px;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-  .pred-table td.mono {
-    font-family: "SF Mono", Menlo, Consolas, monospace;
-  }
-  .pred-ok { color: #1a8917; font-weight: 700; }
-  .pred-bad { color: #d92d20; font-weight: 700; }
-  pre {
-    background: #1d1d1f;
-    color: #f5f5f7;
-    padding: 24px;
-    border-radius: 14px;
-    overflow-x: auto;
-    font-size: 14px;
-    line-height: 1.6;
-  }
-  code {
-    font-family: "SF Mono", Menlo, Consolas, monospace;
-  }
-  footer {
-    text-align: center;
-    padding: 48px 0 80px;
-    color: var(--muted);
-    font-size: 14px;
-  }
-  footer a {
-    color: var(--accent);
-    text-decoration: none;
-  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:#fff;color:var(--ink);
+    font:17px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1040px;margin:0 auto;padding:0 28px}
+  a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
+
+  nav{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.82);backdrop-filter:saturate(180%) blur(20px);border-bottom:1px solid var(--line)}
+  nav .row{display:flex;justify-content:space-between;align-items:center;height:56px;max-width:1040px;margin:0 auto;padding:0 28px}
+  nav .brand{display:flex;align-items:center;gap:9px;font-size:18px;font-weight:650;letter-spacing:-.01em;color:var(--ink)}
+  nav .brand .gem{width:16px;height:16px;transform:rotate(45deg);border-radius:3px;background:linear-gradient(135deg,#9a9af4,#5b5bd6)}
+  nav .links{display:flex;gap:26px;align-items:center}
+  nav .links a{color:var(--ink);font-size:14.5px}
+  @media(max-width:640px){nav .links a:not(.gh){display:none}}
+
+  .hero{padding:70px 0 30px;text-align:center}
+  .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent)}
+  h1{font-size:clamp(40px,7vw,68px);line-height:1.03;letter-spacing:-.035em;font-weight:680;margin:18px 0 0}
+  .hero .sub{max-width:620px;margin:24px auto 0;font-size:clamp(17px,2.1vw,21px);color:var(--muted)}
+
+  .cta-row{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:34px}
+  .btn{display:inline-block;padding:12px 26px;border-radius:999px;font-size:15px;font-weight:600;
+    text-decoration:none;border:1px solid transparent;cursor:pointer;font-family:inherit;transition:opacity .2s ease,border-color .2s ease}
+  .btn:hover{opacity:.85;text-decoration:none}
+  .btn-primary{background:var(--ink);color:#fff}
+  .btn-secondary{background:#fff;color:var(--ink);border-color:var(--line)}
+  .btn-secondary:hover{border-color:var(--accent);color:var(--accent)}
+  .btn:disabled{opacity:.4;cursor:default}
+
+  .stage{max-width:900px;margin:44px auto 0;padding:0 28px}
+  .card{position:relative;background:linear-gradient(180deg,#fbfbff,#f4f4fb);border:1px solid var(--line);border-radius:22px;overflow:hidden;box-shadow:0 1px 0 #fff inset,0 18px 50px -30px rgba(40,40,90,.35);padding:32px}
+  .panel-title{font-family:var(--mono);font-size:12px;font-weight:600;color:var(--faint);margin-bottom:22px;text-transform:uppercase;letter-spacing:.1em;text-align:center}
+
+  .demo-controls{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:28px}
+  .demo-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:8px}
+  @media(max-width:640px){.demo-grid{grid-template-columns:1fr}}
+  canvas{width:100%;height:220px;display:block;border-radius:14px;background:#fff;border:1px solid var(--line)}
+  .chart-label{font-family:var(--mono);font-size:12px;color:var(--faint);text-align:center;margin:12px 0 0}
+
+  .stat-row{display:flex;justify-content:center;gap:48px;margin-top:32px;flex-wrap:wrap;text-align:center}
+  .stat-num{font-size:26px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+  .stat-label{font-family:var(--mono);font-size:11px;color:var(--faint);text-transform:uppercase;letter-spacing:.08em;margin-top:4px}
+
+  .pred-table{width:100%;border-collapse:collapse;margin-top:28px;font-size:15px}
+  .pred-table th,.pred-table td{padding:10px 12px;text-align:center;border-bottom:1px solid var(--line)}
+  .pred-table th{color:var(--faint);font-weight:600;font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.06em}
+  .pred-table td.mono{font-family:var(--mono)}
+  .pred-ok{color:#1a8917;font-weight:700}
+  .pred-bad{color:#d92d20;font-weight:700}
+
+  section{padding:92px 0;border-top:1px solid var(--line)}
+  h2{font-size:clamp(27px,4.2vw,42px);line-height:1.12;letter-spacing:-.025em;font-weight:660;text-align:center;max-width:760px;margin:0 auto}
+  .lead{max-width:640px;margin:22px auto 0;text-align:center;color:var(--muted);font-size:18px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;max-width:900px;margin:48px auto 0}
+  .card2{background:var(--panel2);border:1px solid var(--line);border-radius:16px;padding:24px}
+  .card2 h3{font-size:17px;margin-bottom:6px}
+  .card2 p{color:var(--muted);font-size:15px}
+
+  pre{background:#15161c;color:#ececf4;border-radius:14px;padding:20px 22px;font-family:var(--mono);font-size:13.5px;overflow-x:auto;max-width:640px;margin:40px auto 0}
+  code{font-family:var(--mono)}
+
+  footer{padding:64px 0;border-top:1px solid var(--line);text-align:center;color:var(--muted)}
+  footer .name{color:var(--ink);font-weight:600}
 </style>
 </head>
 <body>
 
-<header class="hero">
-  <div class="wrap">
-    <div class="eyebrow">Synapse</div>
-    <h1>A neural network from scratch in Rust.</h1>
-    <p class="tagline">A reverse-mode autograd engine you can read node by node, and a tiny MLP built on top of it, no ML frameworks, no tensor crates.</p>
-    <div class="cta-row">
-      <a class="btn btn-primary" href="https://github.com/pavanchow/synapse">View on GitHub</a>
-      <a class="btn btn-secondary" href="#xor">Try the live demo</a>
-    </div>
+<nav><div class="row">
+  <div class="brand"><span class="gem"></span>Synapse</div>
+  <div class="links">
+    <a href="#xor">Demo</a><a href="#autograd">How it works</a><a href="#usage">Usage</a>
+    <a class="gh" href="https://github.com/pavanchow/synapse">GitHub</a>
   </div>
-</header>
+</div></nav>
 
-<section id="xor">
-  <div class="wrap">
-    <h2>Train XOR in your browser</h2>
-    <p class="lede">This is not a canned animation. The buttons below drive a scalar autograd engine and a 2 4 4 1 tanh MLP ported line for line from <code>src/value.rs</code> and <code>src/nn.rs</code>, running right here in JavaScript. Every click does a real forward pass, a real backward pass through the computation graph, and a real gradient descent step.</p>
+<div class="hero">
+  <p class="eyebrow">Rust · reverse-mode autograd · no ML frameworks</p>
+  <h1>A neural network,<br>built from scratch.</h1>
+  <p class="sub">Synapse is a reverse-mode autograd engine you can read node by node, and a tiny MLP built on top of it, trained on XOR. No ML frameworks, no tensor crates. Here is the real thing, training in your browser.</p>
+  <div class="cta-row">
+    <a class="btn btn-primary" href="https://github.com/pavanchow/synapse">View on GitHub</a>
+    <a class="btn btn-secondary" href="#xor">Try the live demo</a>
+  </div>
+</div>
 
-    <div class="panel">
-      <div class="panel-title">Live training run</div>
-      <div class="demo-controls">
-        <button class="btn btn-primary" id="btnTrain">Train</button>
-        <button class="btn btn-secondary" id="btnStep">Step 25 epochs</button>
-        <button class="btn btn-secondary" id="btnReset">Reset</button>
-      </div>
-
-      <div class="demo-grid">
-        <div>
-          <canvas id="lossChart" width="420" height="260"></canvas>
-          <p class="chart-label">Loss curve, drawn live from the real MSE at each epoch</p>
-        </div>
-        <div>
-          <canvas id="boundaryChart" width="420" height="260"></canvas>
-          <p class="chart-label">Decision boundary, the trained net evaluated over a grid</p>
-        </div>
-      </div>
-
-      <div class="stat-row">
-        <div>
-          <div class="stat-num" id="statEpoch">0</div>
-          <div class="stat-label">Epoch</div>
-        </div>
-        <div>
-          <div class="stat-num" id="statLoss">1.0000</div>
-          <div class="stat-label">Loss (MSE)</div>
-        </div>
-        <div>
-          <div class="stat-num" id="statCorrect">0/4</div>
-          <div class="stat-label">XOR points correct</div>
-        </div>
-      </div>
-
-      <table class="pred-table">
-        <thead>
-          <tr><th>x1</th><th>x2</th><th>target</th><th>prediction</th><th>result</th></tr>
-        </thead>
-        <tbody id="predBody"></tbody>
-      </table>
+<div id="xor" class="stage">
+  <div class="card">
+    <div class="panel-title">Live training run</div>
+    <p style="max-width:640px;margin:0 auto 24px;text-align:center;color:var(--muted);font-size:15px">
+      Not a canned animation. The buttons below drive a scalar autograd engine and a 2 4 4 1 tanh MLP ported line for line from <code>src/value.rs</code> and <code>src/nn.rs</code>, running right here in JavaScript. Every click runs a real forward pass, a real backward pass through the computation graph, and a real gradient descent step.
+    </p>
+    <div class="demo-controls">
+      <button class="btn btn-primary" id="btnTrain">Train</button>
+      <button class="btn btn-secondary" id="btnStep">Step 25 epochs</button>
+      <button class="btn btn-secondary" id="btnReset">Reset</button>
     </div>
+
+    <div class="demo-grid">
+      <div>
+        <canvas id="lossChart" width="420" height="260"></canvas>
+        <p class="chart-label">Loss curve, drawn live from the real MSE at each epoch</p>
+      </div>
+      <div>
+        <canvas id="boundaryChart" width="420" height="260"></canvas>
+        <p class="chart-label">Decision boundary, the trained net evaluated over a grid</p>
+      </div>
+    </div>
+
+    <div class="stat-row">
+      <div>
+        <div class="stat-num" id="statEpoch">0</div>
+        <div class="stat-label">Epoch</div>
+      </div>
+      <div>
+        <div class="stat-num" id="statLoss">1.0000</div>
+        <div class="stat-label">Loss (MSE)</div>
+      </div>
+      <div>
+        <div class="stat-num" id="statCorrect">0/4</div>
+        <div class="stat-label">XOR points correct</div>
+      </div>
+    </div>
+
+    <table class="pred-table">
+      <thead>
+        <tr><th>x1</th><th>x2</th><th>target</th><th>prediction</th><th>result</th></tr>
+      </thead>
+      <tbody id="predBody"></tbody>
+    </table>
 
     <noscript>
-      <p style="text-align:center; color:#6e6e73; margin-top:24px;">
+      <p style="text-align:center;color:#6a6d78;margin-top:24px">
         JavaScript is disabled, so the animated loss curve above is not rendered. In a real training run the loss on the four XOR points starts around 1.79 and drops below 0.0001 within 300 gradient descent steps, at which point all four XOR inputs classify correctly.
       </p>
     </noscript>
   </div>
-</section>
+</div>
 
 <section id="autograd">
-  <div class="wrap">
-    <h2>The autograd idea</h2>
-    <p class="lede">Every value in Synapse remembers how it was made. Add, multiply, subtract, divide, raise to a power, negate, or pass through tanh, and the operation is recorded as a node in a graph with pointers back to its inputs. Call <code>backward()</code> once on the output and gradients for every value in the graph fall out through the chain rule, in reverse topological order, with shared subexpressions correctly accumulating gradient from every place they are used.</p>
-    <div class="grid">
-      <div class="card">
-        <h3>Value graph</h3>
-        <p>A scalar <code>Value</code> wraps its data, its gradient, and the operation and parent nodes that produced it.</p>
-      </div>
-      <div class="card">
-        <h3>Topological backward pass</h3>
-        <p>One <code>backward()</code> call walks the graph in reverse dependency order and pushes gradients through every op.</p>
-      </div>
-      <div class="card">
-        <h3>Gradient accumulation</h3>
-        <p>A value used twice, like <code>a * a</code>, sums gradient contributions from each use instead of overwriting.</p>
-      </div>
+  <h2>The autograd idea</h2>
+  <p class="lead">Every value in Synapse remembers how it was made. Add, multiply, subtract, divide, raise to a power, negate, or pass through tanh, and the operation is recorded as a node in a graph with pointers back to its inputs. Call <code>backward()</code> once on the output and gradients for every value in the graph fall out through the chain rule, in reverse topological order, with shared subexpressions correctly accumulating gradient from every place they are used.</p>
+  <div class="grid">
+    <div class="card2">
+      <h3>Value graph</h3>
+      <p>A scalar <code>Value</code> wraps its data, its gradient, and the operation and parent nodes that produced it.</p>
+    </div>
+    <div class="card2">
+      <h3>Topological backward pass</h3>
+      <p>One <code>backward()</code> call walks the graph in reverse dependency order and pushes gradients through every op.</p>
+    </div>
+    <div class="card2">
+      <h3>Gradient accumulation</h3>
+      <p>A value used twice, like <code>a * a</code>, sums gradient contributions from each use instead of overwriting.</p>
     </div>
   </div>
 </section>
 
 <section id="usage">
-  <div class="wrap">
-    <h2>Usage</h2>
-    <p class="lede">Clone it, run it, test it. That is the whole workflow.</p>
-    <pre><code>cargo run --release   # trains XOR, prints the loss curve
+  <h2>Usage</h2>
+  <p class="lead">Clone it, run it, test it. That is the whole workflow.</p>
+  <pre><code>cargo run --release   # trains XOR, prints the loss curve
 cargo test            # gradient check, shared-node test, XOR training test</code></pre>
-  </div>
 </section>
 
 <footer>
-  <div class="wrap">
-    By Pavan Nallamothu. <a href="https://github.com/pavanchow/synapse">Source on GitHub</a>.
-  </div>
+  <p>A neural network you can read end to end.</p>
+  <p style="margin-top:12px"><a href="https://github.com/pavanchow/synapse">github.com/pavanchow/synapse</a></p>
+  <p style="margin-top:12px">By <span class="name">Pavan Nallamothu</span>.</p>
 </footer>
 
 <script>
@@ -595,7 +432,7 @@ cargo test            # gradient check, shared-node test, XOR training test</cod
     for (var i = 0; i < lossHistory.length; i++) maxLoss = Math.max(maxLoss, lossHistory[i]);
     if (maxLoss <= 0) maxLoss = 1;
 
-    lossCtx.strokeStyle = "#d2d2d7";
+    lossCtx.strokeStyle = "#ececed";
     lossCtx.lineWidth = 1;
     lossCtx.beginPath();
     var gridLines = 4;
@@ -606,7 +443,7 @@ cargo test            # gradient check, shared-node test, XOR training test</cod
     }
     lossCtx.stroke();
 
-    lossCtx.fillStyle = "#6e6e73";
+    lossCtx.fillStyle = "#6a6d78";
     lossCtx.font = "11px -apple-system, Helvetica, Arial, sans-serif";
     lossCtx.textAlign = "right";
     for (var g2 = 0; g2 <= gridLines; g2++) {
@@ -616,7 +453,7 @@ cargo test            # gradient check, shared-node test, XOR training test</cod
     }
 
     if (lossHistory.length > 1) {
-      lossCtx.strokeStyle = "#0071e3";
+      lossCtx.strokeStyle = "#5b5bd6";
       lossCtx.lineWidth = 2.5;
       lossCtx.beginPath();
       for (var i2 = 0; i2 < lossHistory.length; i2++) {
@@ -631,7 +468,7 @@ cargo test            # gradient check, shared-node test, XOR training test</cod
       var lastX = padL + (plotW * (lossHistory.length - 1)) / Math.max(1, MAX_EPOCHS - 1);
       var lastNorm = lossHistory[lossHistory.length - 1] / maxLoss;
       var lastY = padT + plotH * (1 - lastNorm);
-      lossCtx.fillStyle = "#0071e3";
+      lossCtx.fillStyle = "#5b5bd6";
       lossCtx.beginPath();
       lossCtx.arc(lastX, lastY, 4, 0, Math.PI * 2);
       lossCtx.fill();
@@ -661,9 +498,9 @@ cargo test            # gradient check, shared-node test, XOR training test</cod
         var fy = lo + (hi - lo) * (gy + 0.5) / res;
         var out = net.forward([new Value(fx), new Value(fy)])[0].data;
         var t = Math.max(0, Math.min(1, out));
-        var r = Math.round(255 - t * 145);
+        var r = Math.round(255 - t * 115);
         var gcol = Math.round(255 - (1 - t) * 30 - t * 30);
-        var b = Math.round(255 - (1 - t) * 145);
+        var b = Math.round(255 - (1 - t) * 40);
         boundaryCtx.fillStyle = "rgb(" + r + "," + gcol + "," + b + ")";
         var px = pad + gx * cellW;
         var py = pad + (res - 1 - gy) * cellH;
@@ -671,7 +508,7 @@ cargo test            # gradient check, shared-node test, XOR training test</cod
       }
     }
 
-    boundaryCtx.strokeStyle = "#d2d2d7";
+    boundaryCtx.strokeStyle = "#ececed";
     boundaryCtx.lineWidth = 1;
     boundaryCtx.strokeRect(pad, pad, plotW, plotH);
 
@@ -680,10 +517,10 @@ cargo test            # gradient check, shared-node test, XOR training test</cod
       var py2 = pad + plotH * (1 - (XS[i][1] - lo) / (hi - lo));
       boundaryCtx.beginPath();
       boundaryCtx.arc(px2, py2, 6, 0, Math.PI * 2);
-      boundaryCtx.fillStyle = YS[i] === 1 ? "#1d1d1f" : "#ffffff";
+      boundaryCtx.fillStyle = YS[i] === 1 ? "#15161c" : "#ffffff";
       boundaryCtx.fill();
       boundaryCtx.lineWidth = 2;
-      boundaryCtx.strokeStyle = "#1d1d1f";
+      boundaryCtx.strokeStyle = "#15161c";
       boundaryCtx.stroke();
     }
   }
