@@ -1,0 +1,19 @@
+<svg viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Synapse logo">
+  <g stroke="#f0a24b" stroke-width="4">
+    <line x1="30" y1="40" x2="64" y2="34"/>
+    <line x1="30" y1="40" x2="64" y2="94"/>
+    <line x1="30" y1="88" x2="64" y2="34"/>
+    <line x1="30" y1="88" x2="64" y2="94"/>
+    <line x1="64" y1="34" x2="98" y2="64"/>
+    <line x1="64" y1="94" x2="98" y2="64"/>
+  </g>
+  <g fill="#e2582f">
+    <circle cx="30" cy="40" r="12"/>
+    <circle cx="30" cy="88" r="12"/>
+    <circle cx="98" cy="64" r="12"/>
+  </g>
+  <g fill="#f0a24b">
+    <circle cx="64" cy="34" r="12"/>
+    <circle cx="64" cy="94" r="12"/>
+  </g>
+</svg>

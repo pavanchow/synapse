@@ -1,3 +1,5 @@
+<img src="docs/logo.svg" alt="Synapse logo" width="96">
+
 **A neural network from scratch in Rust.**
 
 Synapse is a small reverse-mode autograd engine and a tiny neural network library, built with no ML or tensor crates. The whole thing is small enough to read node by node in an afternoon.

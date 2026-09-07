@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Synapse, neural network from scratch in Rust</title>
+<link rel="icon" type="image/svg+xml" href="logo.svg">
 <meta name="description" content="Synapse is a neural network from scratch in Rust: a reverse-mode autograd engine and a tiny MLP, trained on XOR, no ML frameworks.">
 <meta name="author" content="Pavan Nallamothu (pavanchow)">
 <link rel="canonical" href="https://pavanchow.github.io/synapse/">
@@ -123,6 +124,7 @@
 </div></nav>
 
 <div class="hero">
+  <img src="logo.svg" alt="Synapse logo" width="72" height="72">
   <p class="eyebrow">Rust · reverse-mode autograd · no ML frameworks</p>
   <h1>A neural network,<br>built from scratch.</h1>
   <p class="sub">Synapse is a reverse-mode autograd engine you can read node by node, and a tiny MLP built on top of it, trained on XOR. No ML frameworks, no tensor crates. Here is the real thing, training in your browser.</p>
@@ -131,6 +133,18 @@
     <a class="btn btn-secondary" href="#xor">Try the live demo</a>
   </div>
 </div>
+
+<details style="max-width:940px;margin:26px auto 0;padding:0 28px">
+  <summary style="cursor:pointer;font-weight:600;font-size:15px">How to use this playground</summary>
+  <div style="margin-top:12px;color:var(--muted);font-size:15px;line-height:1.6">
+    Train a from-scratch neural net on XOR and watch the loss fall and the decision boundary form in real time.
+    <ul style="margin:10px 0 0;padding-left:20px">
+      <li><b>Train</b> runs gradient descent to completion; <b>Step 25 epochs</b> advances in small increments; <b>Reset</b> re-randomizes the weights.</li>
+      <li>The loss curve and decision boundary are drawn live from the real forward and backward passes, not a canned animation.</li>
+      <li>Watch the stats: epoch, MSE loss, and how many of the four XOR points the net classifies correctly.</li>
+    </ul>
+  </div>
+</details>
 
 <div id="xor" class="stage">
   <div class="card">
