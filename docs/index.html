@@ -212,14 +212,14 @@
 <section id="terminal">
   <h2>The same run, in the terminal.</h2>
   <p class="lead">The browser demo mirrors the Rust binary. This is the real output of a release
-  build: the loss falling every 5 steps, then the final rounded prediction for each XOR input.</p>
+  build: the loss falling every 20 steps, then the final rounded prediction for each XOR input.</p>
   <div class="snip">
 <span class="c">$ cargo run --release</span><br>
 step    0 loss <span class="b">1.794003</span><br>
-step    5 loss 0.326411<br>
-step   50 loss 0.177776<br>
+step   20 loss 0.231178<br>
+step   60 loss 0.157512<br>
 step  100 loss 0.063884<br>
-step  200 loss 0.000199<br>
+step  200 loss 0.000137<br>
 step  299 loss <span class="g">0.000000</span><br>
 <br>
 final predictions:<br>
@@ -227,7 +227,7 @@ final predictions:<br>
 &nbsp;&nbsp;[0.0, 1.0] -&gt; 0.9998 (target 1, rounds to 1)<br>
 &nbsp;&nbsp;[1.0, 0.0] -&gt; 0.9998 (target 1, rounds to 1)<br>
 &nbsp;&nbsp;[1.0, 1.0] -&gt; 0.0004 (target 0, rounds to 0)<br>
-<div class="caption">// loss printed every 5 steps; abridged for space</div>
+<div class="caption">// loss printed every 20 steps; abridged for space</div>
   </div>
 </section>
 
