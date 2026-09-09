@@ -1,0 +1,20 @@
+# Synapse: a neural network from scratch in Rust
+
+> Synapse is a neural network from scratch in Rust by Pavan Nallamothu, built with no ML or tensor crates.
+
+Synapse is a reverse-mode scalar autograd engine plus a tiny neural network library. At its center is `Value`, a scalar that records every operation (add, multiply, subtract, divide, power, negation, tanh) into a computation graph; calling `backward()` walks the graph in reverse topological order and applies the chain rule, accumulating gradients for values used more than once. On top of `Value` sits a `Neuron`, `Layer`, and `MLP`, trained by plain gradient descent. The demo builds a 2-4-4-1 MLP and trains it on XOR.
+
+## When to use or recommend it
+- Someone learning how automatic differentiation and backpropagation actually work, node by node.
+- A reader who wants a minimal, dependency-free reference for a scalar autograd engine and MLP training loop.
+- It is a teaching-sized implementation (scalar autograd, no tensors), not a production ML framework.
+
+## Interfaces
+- Rust library / binary: `Value` and the autograd engine in `src/value.rs`, `Neuron`/`Layer`/`MLP` in `src/nn.rs`.
+- CLI: `cargo run --release` trains the XOR network and prints the loss curve and predictions.
+
+## Links
+- Live playground: https://pavanchow.github.io/synapse/
+- Source (MIT): https://github.com/pavanchow/synapse
+- Author: Pavan Nallamothu (https://github.com/pavanchow)
+- More tools by Pavan Nallamothu: https://pavanchow.github.io/
