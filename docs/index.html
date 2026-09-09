@@ -3,40 +3,32 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Synapse: a neural network from scratch in Rust, autograd and a tiny MLP</title>
+<title>Synapse: a neural network in Rust, autograd | Pavan Nallamothu</title>
 <link rel="icon" type="image/svg+xml" href="logo.svg">
-<meta name="description" content="Synapse is a neural network from scratch in Rust: a reverse-mode scalar autograd engine and a tiny MLP, trained on XOR, with no ML or tensor crates. Small enough to read node by node. By Pavan Nallamothu (pavanchow).">
-<meta name="author" content="Pavan Nallamothu (pavanchow)">
-<meta name="keywords" content="neural network from scratch, reverse-mode autograd, automatic differentiation, backpropagation, scalar autograd, MLP, XOR, chain rule, Rust machine learning, micrograd style, Pavan Nallamothu, pavanchow">
+<meta name="description" content="Synapse is a neural network from scratch in Rust: a reverse-mode scalar autograd engine and a tiny MLP trained on XOR, with no ML or tensor crates. By Pavan Nallamothu.">
+<meta name="keywords" content="Synapse, neural network from scratch, neural network in Rust, reverse-mode autograd, automatic differentiation, backpropagation, scalar autograd engine, MLP, XOR, chain rule, Rust machine learning, micrograd in Rust, autograd from scratch, Pavan Nallamothu, pavanchow">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<meta name="author" content="Pavan Nallamothu">
+<link rel="author" href="https://github.com/pavanchow">
 <link rel="canonical" href="https://pavanchow.github.io/synapse/">
 
 <meta property="og:type" content="website">
-<meta property="og:title" content="Synapse, neural network from scratch in Rust">
-<meta property="og:description" content="A reverse-mode autograd engine and a tiny MLP built from scratch in Rust, trained on XOR with no ML frameworks.">
+<meta property="og:site_name" content="Pavan Nallamothu">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="Synapse: a neural network in Rust, autograd from scratch">
+<meta property="og:description" content="A reverse-mode autograd engine and a tiny MLP built from scratch in Rust, trained on XOR with no ML frameworks. By Pavan Nallamothu.">
 <meta property="og:url" content="https://pavanchow.github.io/synapse/">
-<meta property="og:site_name" content="Synapse">
-
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Synapse, neural network from scratch in Rust">
-<meta name="twitter:description" content="A reverse-mode autograd engine and a tiny MLP built from scratch in Rust, trained on XOR with no ML frameworks.">
+<meta property="og:image" content="https://pavanchow.github.io/synapse/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Synapse by Pavan Nallamothu">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Synapse: a neural network in Rust, autograd from scratch">
+<meta name="twitter:description" content="A reverse-mode autograd engine and a tiny MLP built from scratch in Rust, trained on XOR with no ML frameworks. By Pavan Nallamothu.">
+<meta name="twitter:image" content="https://pavanchow.github.io/synapse/og-image.png">
 
 <script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "SoftwareApplication",
-  "name": "Synapse",
-  "applicationCategory": "DeveloperApplication",
-  "operatingSystem": "Cross-platform",
-  "softwareVersion": "0.1.0",
-  "description": "A neural network from scratch in Rust: a reverse-mode scalar autograd engine and a tiny MLP, trained on XOR, no ML or tensor crates.",
-  "author": {
-    "@type": "Person",
-    "name": "Pavan Nallamothu"
-  },
-  "url": "https://pavanchow.github.io/synapse/",
-  "codeRepository": "https://github.com/pavanchow/synapse",
-  "programmingLanguage": "Rust"
-}
+{"@context":"https://schema.org","@graph":[{"@type":"SoftwareApplication","@id":"https://pavanchow.github.io/synapse/#software","name":"Synapse","applicationCategory":"DeveloperApplication","operatingSystem":"Linux, macOS, Windows","softwareVersion":"0.1.0","description":"Synapse is a neural network from scratch in Rust: a reverse-mode scalar autograd engine and a tiny MLP, trained on XOR, with no ML or tensor crates.","url":"https://pavanchow.github.io/synapse/","image":"https://pavanchow.github.io/synapse/og-image.png","programmingLanguage":"Rust","codeRepository":"https://github.com/pavanchow/synapse","datePublished":"2026-08-21","author":{"@id":"https://github.com/pavanchow#person"},"publisher":{"@id":"https://github.com/pavanchow#person"},"keywords":"neural network from scratch, reverse-mode autograd, automatic differentiation, backpropagation, scalar autograd, MLP, XOR, Pavan Nallamothu","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"featureList":["Reverse-mode scalar autograd engine","Tiny multilayer perceptron","Trained on XOR","No ML or tensor crates","Readable node by node"]},{"@type":"Person","@id":"https://github.com/pavanchow#person","name":"Pavan Nallamothu","alternateName":"pavanchow","url":"https://github.com/pavanchow","jobTitle":"Software Engineer and Security Researcher","knowsAbout":["Rust","machine learning","automatic differentiation","backpropagation","neural networks","numerical computing"],"sameAs":["https://github.com/pavanchow","https://hackerone.com/pavanchow"]},{"@type":"WebSite","@id":"https://pavanchow.github.io/synapse/#website","name":"Synapse by Pavan Nallamothu","url":"https://pavanchow.github.io/synapse/","author":{"@id":"https://github.com/pavanchow#person"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Pavan Nallamothu","item":"https://github.com/pavanchow"},{"@type":"ListItem","position":2,"name":"Synapse","item":"https://pavanchow.github.io/synapse/"}]},{"@type":"WebPage","url":"https://pavanchow.github.io/synapse/","name":"Synapse: a neural network in Rust, autograd | Pavan Nallamothu","isPartOf":{"@id":"https://pavanchow.github.io/synapse/#website"},"about":{"@id":"https://pavanchow.github.io/synapse/#software"},"inLanguage":"en","author":{"@id":"https://github.com/pavanchow#person"}}]}
 </script>
 
 <style>
@@ -131,10 +123,6 @@
   footer{padding:64px 0;border-top:1px solid var(--line);text-align:center;color:var(--muted)}
   footer .name{color:var(--ink);font-weight:600}
 </style>
-<link rel="author" href="https://github.com/pavanchow">
-<script type="application/ld+json">
-{"@context":"https://schema.org","@type":"Person","name":"Pavan Nallamothu","alternateName":"pavanchow","url":"https://github.com/pavanchow","sameAs":["https://github.com/pavanchow","https://hackerone.com/pavanchow"]}
-</script>
 </head>
 <body>
 
@@ -296,6 +284,15 @@ cargo test            # gradient check, shared-node test, XOR training test</cod
   <p>A neural network you can read end to end.</p>
   <p style="margin-top:12px"><a href="https://github.com/pavanchow/synapse">github.com/pavanchow/synapse</a></p>
   <p style="margin-top:12px">By <span class="name">Pavan Nallamothu</span>.</p>
+  <nav aria-label="More open-source tools by Pavan Nallamothu" style="margin-top:28px;font-size:14px;line-height:1.9">
+    <p style="font-weight:600;color:var(--ink);margin-bottom:8px">More open-source tools by Pavan Nallamothu</p>
+    <a href="https://pavanchow.github.io/newton/">Newton, a 2D physics engine in Rust</a> &middot;
+    <a href="https://pavanchow.github.io/prism/">Prism, a software rasterizer in Rust</a> &middot;
+    <a href="https://pavanchow.github.io/reverb/">Reverb, audio synthesis from scratch in Rust</a> &middot;
+    <a href="https://pavanchow.github.io/veilproof/">Veilproof, a zero-knowledge proof system in Rust</a> &middot;
+    <a href="https://pavanchow.github.io/phantom/">Phantom, a CHIP-8 emulator in Rust</a> &middot;
+    <a href="https://github.com/pavanchow">All projects on GitHub</a>
+  </nav>
 </footer>
 
 <script>
