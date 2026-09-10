@@ -6,6 +6,8 @@ Synapse is a neural network built from scratch in Rust: a reverse-mode scalar au
 
 **[Live demo](https://pavanchow.github.io/synapse/)** · MIT licensed · written in Rust
 
+Built from scratch by [Pavan Nallamothu](https://pavanchow.github.io/) ([LinkedIn](https://www.linkedin.com/in/pavanchow/), [GitHub](https://github.com/pavanchow)).
+
 ## The idea
 
 At the center is `Value`, a scalar that remembers how it was computed. Every add, multiply, subtract, divide, power, negation, or tanh you apply to a `Value` records a node in a computation graph, with pointers back to the values that produced it. Call `backward()` on the final output and the graph walks itself in reverse topological order, seeding the output gradient to 1.0 and pushing gradient contributions back through every operation using the chain rule. If a value gets used more than once in an expression, its gradient contributions from each use are accumulated rather than overwritten, so shared subexpressions come out correct.
